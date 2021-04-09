@@ -1,6 +1,9 @@
+const path = require('path');
+
 exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions;
   const dateOfDataRetrival = formatStringToGraphqlFormat();
-  return graphql(`
+  const { data } = await graphql(`
   query AllData {
     confirmed: allTimeSeriesCovid19ConfirmedGlobalCsv {
       nodes {
@@ -23,29 +26,31 @@ exports.createPages = async ({ graphql, actions }) => {
       ${dateOfDataRetrival}
     }
   }
-  }`).then(({ data }) => {
-    const confirmedCases = data.confirmed.nodes
-      .reduce(uniqueCountryAndState, [])
-      .map((country) => parseInt(country[dateOfDataRetrival]))
-      .reduce(summation, 0);
+  }`);
 
-    console.table(['Confirmed', confirmedCases]);
+  const confirmedCases = data.confirmed.nodes
+    .reduce(uniqueCountryAndState, [])
+    .map((country) => parseInt(country[dateOfDataRetrival]))
+    .reduce(summation, 0);
 
-    const deathCount = data.deathCount.nodes
-      .reduce(uniqueCountryAndState, [])
-      .map((country) => parseInt(country[dateOfDataRetrival]))
-      .reduce(summation, 0);
+  const deathCount = data.deathCount.nodes
+    .reduce(uniqueCountryAndState, [])
+    .map((country) => parseInt(country[dateOfDataRetrival]))
+    .reduce(summation, 0);
 
-    console.table([`deathCount`, deathCount]);
+  const recoveredCount = data.recovered.nodes
+    .reduce(uniqueCountryAndState, [])
+    .map((country) => parseInt(country[dateOfDataRetrival]))
+    .reduce(summation, 0);
 
-    const recoveredCount = data.recovered.nodes
-      .reduce(uniqueCountryAndState, [])
-      .map((country) => parseInt(country[dateOfDataRetrival]))
-      .reduce(summation, 0);
-
-    console.table([`deathCount`, recoveredCount]);
-
-    return { confirmedCases, deathCount, recoveredCount };
+  createPage({
+    path: '/',
+    component: path.resolve(`./src/templates/home.js`),
+    context: {
+      confirmed: confirmedCases,
+      deaths: deathCount,
+      recoveries: recoveredCount,
+    },
   });
 };
 
