@@ -19,7 +19,7 @@ exports.createPages = async ({ graphql, actions }) => {
       ${dateOfDataRetrival}
      }
    }
-   recovered: allTimeSeriesCovid19RecoveredGlobalCsv {
+   recoveries: allTimeSeriesCovid19RecoveredGlobalCsv {
     nodes {
       Country_Region
       Province_State
@@ -28,20 +28,37 @@ exports.createPages = async ({ graphql, actions }) => {
   }
   }`);
 
-  const confirmedCases = data.confirmed.nodes
-    .reduce(uniqueCountryAndState, [])
-    .map((country) => parseInt(country[dateOfDataRetrival]))
-    .reduce(summation, 0);
+  const confirmData = data.confirmed.nodes.reduce(uniqueCountryAndState, []);
+  const deathsData = data.deathCount.nodes.reduce(uniqueCountryAndState, []);
+  const recoveriesData = data.recoveries.nodes.reduce(
+    uniqueCountryAndState,
+    []
+  );
 
-  const deathCount = data.deathCount.nodes
-    .reduce(uniqueCountryAndState, [])
-    .map((country) => parseInt(country[dateOfDataRetrival]))
-    .reduce(summation, 0);
+  const countriesTotalConfirmedCases = countCountryTotal(confirmData);
+  const countriesTotalDeaths = countCountryTotal(deathsData);
+  const countriesTotalRecoveries = countCountryTotal(recoveriesData);
+  const countriesData = countriesTotalConfirmedCases.map((country) => ({
+    name: country.name,
+    confirmed: country.totalCases,
+    deaths: countriesTotalDeaths.find(({ name }) => name === country.name)
+      .totalCases,
+    recoveries: countriesTotalRecoveries.find(
+      ({ name }) => name === country.name
+    ).totalCases,
+  }));
 
-  const recoveredCount = data.recovered.nodes
-    .reduce(uniqueCountryAndState, [])
-    .map((country) => parseInt(country[dateOfDataRetrival]))
-    .reduce(summation, 0);
+  createPage({
+    path: '/countries',
+    component: path.resolve(`./src/templates/countries.js`),
+    context: {
+      countriesData: countriesData,
+    },
+  });
+
+  const confirmedCases = countTotal(confirmData);
+  const deathCount = countTotal(deathsData);
+  const recoveredCount = countTotal(recoveriesData);
 
   createPage({
     path: '/',
@@ -111,3 +128,33 @@ const uniqueCountryAndState = (acc, val) => {
     return [...acc, val];
   }
 };
+
+const countCountryTotal = (nodes) =>
+  nodes
+    .map(({ Country_Region, ...rest }) => ({
+      name: Country_Region,
+      totalCases: rest[formatStringToGraphqlFormat()],
+    }))
+    .reduce((acc, country) => {
+      const index = acc.findIndex(({ name }) => name === country.name);
+      if (index >= 0) {
+        acc[index] = {
+          ...acc[index],
+          totalCases: acc[index].totalCases + parseInt(country.totalCases),
+        };
+        return acc;
+      }
+
+      return [
+        ...acc,
+        {
+          name: country.name,
+          totalCases: parseInt(country.totalCases),
+        },
+      ];
+    }, []);
+
+const countTotal = (nodes) =>
+  nodes
+    .map((country) => parseInt(country[formatStringToGraphqlFormat()]))
+    .reduce(summation, 0);
