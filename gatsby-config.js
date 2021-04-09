@@ -1,4 +1,9 @@
 module.exports = {
+  siteMetadata: {
+    title: `CS 280 - Covid 19 news`,
+    description:
+      'The most unbias news about the Pandemic. Our purpose is to fight the 2021 Infodemic',
+  },
   plugins: [
     {
       resolve: `gatsby-source-git`,
