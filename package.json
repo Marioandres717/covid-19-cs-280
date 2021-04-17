@@ -1,11 +1,14 @@
 {
-  "name": "covid-cs-",
+  "name": "covid-19-cs-280-project",
   "version": "1.0.0",
   "private": true,
-  "description": "My Gatsby site",
+  "description": "Covid 19 site for CS 280",
   "author": "Mario Andres",
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "covid-19",
+    "csv",
+    "hopkins"
   ],
   "scripts": {
     "develop": "gatsby develop",
@@ -16,9 +19,10 @@
   },
   "license": "0BSD",
   "dependencies": {
+    "csvtojson": "^2.0.10",
     "gatsby": "^3.2.1",
     "gatsby-source-git": "^1.1.0",
-    "gatsby-transformer-csv": "^3.2.0",
+    "lodash": "^4.17.21",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   }

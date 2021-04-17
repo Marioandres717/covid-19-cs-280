@@ -1,6 +1,53 @@
 const path = require('path');
+const csvToJSON = require('csvtojson');
+const _ = require(`lodash`);
 
-exports.createPages = async ({ graphql, actions }) => {
+async function onCreateNode({
+  node,
+  actions,
+  createNodeId,
+  createContentDigest,
+}) {
+  function transformObject(obj, id, type) {
+    const csvNode = {
+      ...obj,
+      id,
+      children: [],
+      parent: node.id,
+      internal: {
+        contentDigest: createContentDigest(obj),
+        type,
+      },
+    };
+    createNode(csvNode);
+    createParentChildLink({ parent: node, child: csvNode });
+  }
+
+  const { createNode, createParentChildLink } = actions;
+
+  if (node.internal.mediaType !== `text/csv`) {
+    return;
+  }
+
+  if (
+    !/^time_series_covid19/.test(node.name) &&
+    node.name !== getTodayInFileFormat()
+  ) {
+    return;
+  }
+
+  const parsedContent = await csvToJSON().fromFile(node.absolutePath);
+  const filename = parseInt(node.name) ? 'today' : node.name;
+  parsedContent.forEach((obj, i) => {
+    transformObject(
+      obj,
+      obj.id ? obj.id : createNodeId(`${node.id} [${i}] >>> CSV`),
+      _.upperFirst(_.camelCase(`${filename} Csv`))
+    );
+  });
+}
+
+async function createPages({ graphql, actions }) {
   const { createPage } = actions;
   const dateOfDataRetrival = formatStringToGraphqlFormat();
   const { data } = await graphql(`
@@ -69,11 +116,20 @@ exports.createPages = async ({ graphql, actions }) => {
       recoveries: recoveredCount,
     },
   });
-};
+}
 
-function dataDate(date) {
+exports.onCreateNode = onCreateNode;
+exports.createPages = createPages;
+
+function dataDate(date = new Date()) {
   date.setDate(date.getDate() - 1);
   return date;
+}
+
+function getTodayInFileFormat() {
+  const [today] = dataDate(new Date()).toISOString().split('T');
+  const [year, month, day] = today.split('-');
+  return `${month}-${day}-${year}`;
 }
 
 function formatStringToGraphqlFormat(date = new Date()) {
