@@ -5,6 +5,7 @@ module.exports = {
       'The most unbias news about the Pandemic. Our purpose is to fight the 2021 Infodemic',
   },
   plugins: [
+    '@chakra-ui/gatsby-plugin',
     {
       resolve: `gatsby-source-git`,
       options: {
