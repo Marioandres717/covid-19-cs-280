@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Home({ pageContext }) {
   console.log(`data`, pageContext);
-  const { confirmed, deaths, recoveries } = pageContext;
+  const { active, confirmed, deaths, recoveries } = pageContext;
   return (
     <div>
       <h1>Tracking Coronavirus</h1>
@@ -15,6 +15,7 @@ export default function Home({ pageContext }) {
           justifyContent: 'space-around',
         }}
       >
+        <span>Active: {active}</span>
         <span>Confirmed: {confirmed}</span>
         <span>Recoveries: {recoveries}</span>
         <span>Deaths: {deaths}</span>
