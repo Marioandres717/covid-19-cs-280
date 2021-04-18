@@ -59,7 +59,8 @@ async function onCreateNode({
 }
 
 async function createPages({ graphql, actions: { createPage } }) {
-  const summation = (acc, val) => acc + parseInt(val ? val : 0);
+  const summation = (acc, val) =>
+    parseInt(acc ? acc : 0) + parseInt(val ? val : 0);
   const countTotalGlobal = (nodes) =>
     nodes.reduce(
       (acc, node) => ({
@@ -121,20 +122,57 @@ async function createPages({ graphql, actions: { createPage } }) {
     },
   });
 
-  createPage({
-    path: '/country',
-    component: path.resolve(`./src/templates/country.js`),
-    context: {
-      country: {
-        Confirmed: null,
-        Province_State: null,
-        Combined_Key: null,
-        Country_Region: null,
-        Deaths: null,
-        Case_Fatality_Ratio: null,
-        Recovered: null,
+  const countries = globalData
+    .reduce((acc, val) => {
+      const index = acc.findIndex(
+        (ele) =>
+          ele.Country_Region === val.Country_Region &&
+          ele.Province_State === val.Province_State
+      );
+      if (index >= 0) {
+        acc[index] = {
+          ...acc[index],
+          Active: summation(acc[index].Active, val.Active),
+          Confirmed: summation(acc[index].Confirmed, val.Confirmed),
+          Deaths: summation(acc[index].Deaths, val.Deaths),
+          Recovered: summation(acc[index].Recovered, val.Recovered),
+        };
+        return acc;
+      }
+      return [...acc, val];
+    }, [])
+    .reduce((acc, val) => {
+      const index = acc.findIndex(
+        (ele) => ele.Country_Region === val.Country_Region
+      );
+      if (index >= 0) {
+        acc[index] = {
+          ...acc[index],
+          Provinces_States: [...acc[index].Provinces_States, val],
+        };
+        return acc;
+      }
+
+      const country = {
+        Country_Region: val.Country_Region,
+        Provinces_States: [
+          {
+            ...val,
+          },
+        ],
+      };
+
+      return [...acc, country];
+    }, []);
+
+  countries.forEach((country) => {
+    createPage({
+      path: `/countries/${country.Country_Region}`,
+      component: path.resolve(`./src/templates/country.js`),
+      context: {
+        country: { ...country },
       },
-    },
+    });
   });
 }
 
