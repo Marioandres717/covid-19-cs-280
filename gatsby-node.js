@@ -42,7 +42,7 @@ async function onCreateNode({
   if (node.internal.mediaType !== `text/csv`) {
     return;
   }
-  console.log(`@@@@@@object`, getTodayInFileFormat());
+
   if (
     !/^time_series_covid19/.test(node.name) &&
     node.name !== getTodayInFileFormat()
