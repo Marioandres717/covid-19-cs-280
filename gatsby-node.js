@@ -9,12 +9,15 @@ async function onCreateNode({
   createContentDigest,
 }) {
   function dataDate(date = new Date()) {
-    date.setDate(date.getDate() - 1);
-    return date;
+    const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+    const msLocal = date.getTime() - offsetMs;
+    const dateLocal = new Date(msLocal);
+    dateLocal.setDate(dateLocal.getDate() - 1);
+    return dateLocal;
   }
 
   function getTodayInFileFormat() {
-    const [today] = dataDate(new Date()).toISOString().split('T');
+    const [today] = dataDate().toISOString().split('T');
     const [year, month, day] = today.split('-');
     return `${month}-${day}-${year}`;
   }
@@ -39,14 +42,13 @@ async function onCreateNode({
   if (node.internal.mediaType !== `text/csv`) {
     return;
   }
-
+  console.log(`@@@@@@object`, getTodayInFileFormat());
   if (
     !/^time_series_covid19/.test(node.name) &&
     node.name !== getTodayInFileFormat()
   ) {
     return;
   }
-
   const parsedContent = await csvToJSON().fromFile(node.absolutePath);
   const filename = parseInt(node.name) ? 'today' : node.name;
   parsedContent.forEach((obj, i) => {
