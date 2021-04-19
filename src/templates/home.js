@@ -1,6 +1,13 @@
 import React from 'react';
-import { Flex, Heading } from '@chakra-ui/layout';
+import { Flex, Heading, Box, Text } from '@chakra-ui/layout';
 import Layout from '../components/layout';
+
+const Stats = ({ value, label }) => (
+  <Box>
+    <Text fontSize="2em">{value}</Text>
+    <Text color="tomato">{label}</Text>
+  </Box>
+);
 
 export default function Home({ pageContext }) {
   const { active, confirmed, deaths, recoveries } = pageContext;
@@ -15,14 +22,18 @@ export default function Home({ pageContext }) {
           the University of Regina. The purpose of it is for people to have a
           website that they can rely on accurated information about the covid-19
           pandemic. This application shows the near real-time status based on
-          data from the sources mentioned in the footer
+          data from the sources mentioned in the footer.
         </p>
 
-        <Flex w="100%" pt={20} justify="space-between">
-          <p>Active: {active}</p>
-          <p>Confirmed: {confirmed}</p>
-          <p>Recoveries: {recoveries}</p>
-          <p>Deaths: {deaths}</p>
+        <Box w="100%" my={4} p={2} bg="lightgray">
+          Last Updated on HERE GOES DATE
+        </Box>
+
+        <Flex w="100%" my={4} justify="space-between">
+          <Stats value={active} label="Active" />
+          <Stats value={confirmed} label="Confirmed" />
+          <Stats value={recoveries} label="Recoveries" />
+          <Stats value={deaths} label="Deaths" />
         </Flex>
       </Flex>
     </Layout>
