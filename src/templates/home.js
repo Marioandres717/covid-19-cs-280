@@ -1,25 +1,30 @@
 import React from 'react';
+import { Flex, Heading } from '@chakra-ui/layout';
+import Layout from '../components/layout';
 
 export default function Home({ pageContext }) {
-  console.log(`data`, pageContext);
   const { active, confirmed, deaths, recoveries } = pageContext;
   return (
-    <div>
-      <h1>Tracking Coronavirus</h1>
-      <h5>Computer Science 280 - University of Regina</h5>
+    <Layout>
+      <Flex direction="column" alignItems="center">
+        <Heading as="h1" size="2xl" mb={5}>
+          Tracking Coronavirus
+        </Heading>
+        <p>
+          This website was created for a project in the CS 280 class offer at
+          the University of Regina. The purpose of it is for people to have a
+          website that they can rely on accurated information about the covid-19
+          pandemic. This application shows the near real-time status based on
+          data from the sources mentioned in the footer
+        </p>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: '`row`',
-          justifyContent: 'space-around',
-        }}
-      >
-        <span>Active: {active}</span>
-        <span>Confirmed: {confirmed}</span>
-        <span>Recoveries: {recoveries}</span>
-        <span>Deaths: {deaths}</span>
-      </div>
-    </div>
+        <Flex w="100%" pt={20} justify="space-between">
+          <p>Active: {active}</p>
+          <p>Confirmed: {confirmed}</p>
+          <p>Recoveries: {recoveries}</p>
+          <p>Deaths: {deaths}</p>
+        </Flex>
+      </Flex>
+    </Layout>
   );
 }

@@ -10,6 +10,7 @@ function Footer() {
       h="100%"
       alignItems="center"
       backgroundColor="tomato"
+      borderTop="2px"
     >
       <span>
         Data Source:{' '}

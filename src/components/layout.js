@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Grid } from '@chakra-ui/react';
 import Navigation from './navigation';
 import Footer from './footer';
+import Main from './main';
 
-function Layout() {
+function Layout(props) {
   return (
     <Grid
       h="100vh"
@@ -11,7 +12,7 @@ function Layout() {
       templateColumns="1fr"
     >
       <Navigation />
-      <GridItem bg="papayawhip">HOW</GridItem>
+      <Main>{props.children}</Main>
       <Footer />
     </Grid>
   );
