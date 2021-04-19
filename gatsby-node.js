@@ -116,14 +116,6 @@ async function createPages({ graphql, actions: { createPage } }) {
     },
   });
 
-  createPage({
-    path: '/countries',
-    component: path.resolve(`./src/templates/countries.js`),
-    context: {
-      countriesData: globalData,
-    },
-  });
-
   const countries = globalData
     .reduce((acc, val) => {
       const index = acc.findIndex(
@@ -150,6 +142,10 @@ async function createPages({ graphql, actions: { createPage } }) {
       if (index >= 0) {
         acc[index] = {
           ...acc[index],
+          totalActive: summation(acc[index].totalActive, val.Active),
+          totalConfirmed: summation(acc[index].totalConfirmed, val.Confirmed),
+          totalRecoveries: summation(acc[index].totalRecovered, val.Recovered),
+          totalDeaths: summation(acc[index].totalDeaths, val.Deaths),
           Provinces_States: [...acc[index].Provinces_States, val],
         };
         return acc;
@@ -157,6 +153,10 @@ async function createPages({ graphql, actions: { createPage } }) {
 
       const country = {
         Country_Region: val.Country_Region,
+        totalActive: val.Active ? parseInt(val.Active) : 0,
+        totalConfirmed: val.Confirmed ? parseInt(val.Confirmed) : 0,
+        totalRecoveries: val.Recovered ? parseInt(val.Recovered) : 0,
+        totalDeaths: val.Deaths ? parseInt(val.Deaths) : 0,
         Provinces_States: [
           {
             ...val,
@@ -166,6 +166,20 @@ async function createPages({ graphql, actions: { createPage } }) {
 
       return [...acc, country];
     }, []);
+
+  createPage({
+    path: '/countries',
+    component: path.resolve(`./src/templates/countries.js`),
+    context: {
+      countriesData: countries.map((country) => ({
+        Country_region: country.Country_Region,
+        active: country.totalActive,
+        confirmed: country.totalConfirmed,
+        deaths: country.totalDeaths,
+        recovered: country.totalRecoveries,
+      })),
+    },
+  });
 
   countries.forEach((country) => {
     createPage({
