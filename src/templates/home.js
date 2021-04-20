@@ -1,13 +1,7 @@
 import React from 'react';
-import { Flex, Heading, Box, Text } from '@chakra-ui/layout';
+import { Flex, Heading, Box } from '@chakra-ui/layout';
 import Layout from '../components/layout';
-
-const Stats = ({ value, label }) => (
-  <Box>
-    <Text fontSize="2em">{value}</Text>
-    <Text color="tomato">{label}</Text>
-  </Box>
-);
+import Stats from '../components/stats';
 
 export default function Home({ pageContext }) {
   const { active, confirmed, deaths, recoveries } = pageContext;

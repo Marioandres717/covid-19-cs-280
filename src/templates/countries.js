@@ -14,9 +14,8 @@ import {
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import Layout from '../components/layout';
 
-export default function countries({ pageContext }) {
+export default function Countries({ pageContext }) {
   const { countriesData } = pageContext;
-  console.log(`countriesData`, countriesData);
   return (
     <Layout>
       <Heading>Data By Countries</Heading>
