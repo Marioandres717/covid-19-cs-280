@@ -1,6 +1,7 @@
 const path = require('path');
 const csvToJSON = require('csvtojson');
 const _ = require(`lodash`);
+const fetch = require('node-fetch');
 
 async function onCreateNode({
   node,
@@ -8,20 +9,6 @@ async function onCreateNode({
   createNodeId,
   createContentDigest,
 }) {
-  function dataDate(date = new Date()) {
-    const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-    const msLocal = date.getTime() - offsetMs;
-    const dateLocal = new Date(msLocal);
-    dateLocal.setDate(dateLocal.getDate() - 1);
-    return dateLocal;
-  }
-
-  function getTodayInFileFormat() {
-    const [today] = dataDate().toISOString().split('T');
-    const [year, month, day] = today.split('-');
-    return `${month}-${day}-${year}`;
-  }
-
   function transformObject(obj, id, type) {
     const csvNode = {
       ...obj,
@@ -190,7 +177,34 @@ async function createPages({ graphql, actions: { createPage } }) {
       },
     });
   });
+
+  const [month, day, year] = getTodayInFileFormat().split('-');
+  const url = `https://newsapi.org/v2/everything?q=covid19&from=${year}-${month}-${day}&sortBy=popularity&apiKey=${process.env.NEWS_API}`;
+  const req = await fetch(url);
+  const news = await req.json();
+
+  createPage({
+    path: '/news',
+    component: path.resolve(`./src/templates/news.js`),
+    context: {
+      news,
+    },
+  });
 }
 
 exports.onCreateNode = onCreateNode;
 exports.createPages = createPages;
+
+function dataDate(date = new Date()) {
+  const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+  const msLocal = date.getTime() - offsetMs;
+  const dateLocal = new Date(msLocal);
+  dateLocal.setDate(dateLocal.getDate() - 1);
+  return dateLocal;
+}
+
+function getTodayInFileFormat() {
+  const [today] = dataDate().toISOString().split('T');
+  const [year, month, day] = today.split('-');
+  return `${month}-${day}-${year}`;
+}
