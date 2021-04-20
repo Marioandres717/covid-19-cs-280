@@ -4,7 +4,7 @@ import Layout from '../components/layout';
 import Stats from '../components/stats';
 
 export default function Home({ pageContext }) {
-  const { active, confirmed, deaths, recoveries } = pageContext;
+  const { active, confirmed, deaths, recoveries, lastUpdate } = pageContext;
   return (
     <Layout>
       <Flex direction="column" alignItems="center">
@@ -19,8 +19,17 @@ export default function Home({ pageContext }) {
           data from the sources mentioned in the footer.
         </p>
 
-        <Box w="100%" my={4} p={2} bg="lightgray">
-          Last Updated on HERE GOES DATE
+        <Box
+          w="100%"
+          my={4}
+          p={4}
+          bg="lightgray"
+          color="tomato"
+          fontWeight={700}
+          fontSize={18}
+          align="center"
+        >
+          Last Updated on {lastUpdate}
         </Box>
 
         <Flex w="100%" my={4} justify="space-between">

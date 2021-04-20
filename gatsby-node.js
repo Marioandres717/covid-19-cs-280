@@ -96,6 +96,7 @@ async function createPages({ graphql, actions: { createPage } }) {
     path: '/',
     component: path.resolve(`./src/templates/home.js`),
     context: {
+      lastUpdate: new Date(),
       active: globalActive,
       confirmed: globalConfirmed,
       deaths: globalDeaths,
