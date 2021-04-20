@@ -1,5 +1,4 @@
 import React from 'react';
-import { Image } from '@chakra-ui/image';
 import { Flex, Grid, Heading, Text, Box } from '@chakra-ui/layout';
 import Layout from '../components/layout';
 export default function News({ pageContext }) {
@@ -16,6 +15,7 @@ export default function News({ pageContext }) {
         <Grid w="100%" my={8} templateColumns="repeat(3, 1fr)" gap={8}>
           {articles.map((article) => (
             <Flex
+              as="a"
               direction="column"
               justify="flex-end"
               maxWidth="sm"
@@ -27,6 +27,15 @@ export default function News({ pageContext }) {
               backgroundRepeat="no-repeat"
               boxShadow="dark-lg"
               key={article.url}
+              sx={{
+                '&:hover': {
+                  background: 'tomato',
+                  cursor: 'pointer',
+                },
+              }}
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <Text fontWeight={700} color="white">
                 {article.title}
