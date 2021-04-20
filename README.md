@@ -1,48 +1,63 @@
 <p align="center">
-  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter">
+  <a href="https://cs-280-covid-19.netlify.app/" alt="application link">
     <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
   </a>
 </p>
 <h1 align="center">
-  Gatsby minimal starter
+  CS-280-Covid-19
 </h1>
 
 ## 🚀 Quick start
 
-1.  **Create a Gatsby site.**
+**Live site preview**
 
-    Use the Gatsby CLI to create a new site, specifying the minimal starter.
+[Link to application live preview](https://cs-280-covid-19.netlify.app/)
 
-    ```shell
-    # create a new Gatsby site using the minimal starter
-    npm init gatsby
-    ```
+1. **Clone Github Repository.**
 
-2.  **Start developing.**
+   Use git to download the repository
 
-    Navigate into your new site’s directory and start it up.
+   ```shell
+   # clone repository
+   git clone https://github.com/Marioandres717/covid-19-cs-280.git
+   ```
 
-    ```shell
-    cd my-gatsby-site/
-    npm run develop
-    ```
+2. **Add Netlify-CLI**
 
-3.  **Open the code and start customizing!**
+   To install Netlify CLI, make sure you have Node.js version 10 or later, then run this command from any directory in your terminal
 
-    Your site is now running at http://localhost:8000!
+   ```shell
+   npm install netlify-cli -g
+   ```
 
-    Edit `src/pages/index.js` to see your site update in real-time!
+3. **Install Project Dependencies.**
 
-4.  **Learn more**
+   Navigate into your new site’s directory and install dependencies
 
-    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+   ```shell
+   cd covid-19-cs-280/
+   npm install
+   ```
 
-    - [Tutorials](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+4. **Add the News API Key**
+   This Application uses the [News API](https://newsapi.org/)
+   ```shell
+   # in the root folder run
+   touch .env
+   ```
+   Add API key to file
+   ```shell
+   NEWS_API=<YOUR KEY>
+   ```
+5. **Start Project**
+   ```shell
+     netlify dev
+   ```
+6. **Open the code and start customizing!**
 
-    - [Guides](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+   Your site is now running at http://localhost:8888
 
-    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+7. **Links**
 
-    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-
-    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+   - [Netlify CLI](https://docs.netlify.com/cli/get-started/)
+   - [News API](https://newsapi.org/)

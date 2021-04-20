@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Grid, Heading, Text, Box } from '@chakra-ui/layout';
+import { Flex, Grid, Heading, Text } from '@chakra-ui/layout';
 import Layout from '../components/layout';
 export default function News({ pageContext }) {
   const { news } = pageContext;
